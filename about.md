@@ -4,15 +4,8 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+I am currently at my 2nd year of my PhD at `Laboratoire Lorrain De Recherche En Informatique Et Ses Applications` (LORIA). My lab is a joint research unit of `CNRS`, the `University of Lorraine` and `INRIA` at Nancy, France. My main research topic is security for real-time peer-to-peer collaborative editing. Which can roughly expressed as how to secure a `Google docs` tool but using a peer-to-peer architecture (Check out [MUTE](https://github.com/coast-team/mute)).
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+I am interested, and also has somewhat limited experience, in information security in general, applied cryptography and blockchain technology. 
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
-
-
-[jekyll-organization]: https://github.com/jekyll
+For my complete CV, please take a look at my [LinkedIn](https://www.linkedin.com/in/eledra/) or email me directly.
