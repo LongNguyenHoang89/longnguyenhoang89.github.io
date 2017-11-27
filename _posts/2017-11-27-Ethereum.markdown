@@ -1,0 +1,28 @@
+---
+layout: post
+title:  "Setup your Ethereum DApp development environment"
+date:   2017-11-27 10:34:00 +0100
+categories: Ethereum
+---
+
+My friend requested me to write a tutorial for basic setup when developing a `DApp` (decentralized application on Ethereum). I like to do it manually, setup and script everything by my own so that I can understand things more clearly. However, there're plenty of tutorials out there with regards to `virtual containers` and automated scripts, you might want to check out those to avoid all the dirty works coming. Now let's get started.
+
+# Architecture
+Our little project will involve several things:
+* Setup a private Ethereum network
+* Write and deploy a `smart contract` on your private net
+* Some Java code to interact with the contract from a third party application
+
+The rational is quite simple. The test network allow you to simulate all kind of stuffs. For example, in my research, I have to simulate the situation when malicious miners try to provide clients a fake blockchain. Obviously, you don't really find this situation randomly on Mainnet. Another good reason is that you don't need any token for bulding and testing your transactions.
+
+As you already know, Ethereum uses a `Peer-to-peer` (P2P) architecture. That is, instead of every peers connects to a subset of centralized servers, a peer acts both as a client and a server and exchange information directly with each other via tcp connections. There are, in fact, 4 different types of `peer` in Ethereum network:
+
+1. `bootnode`: A coordinator which has information about other peers in the network. It works like an index server in a torrent network as a boostraping point. Basically, when a peer join the P2P the network by connect to a bootnode, the bootnode returns a list of available other peers so that the newcomer can connect to.
+2. `miner`: Peer that perform validation for transactions and mining blocks.
+3. `wallet`: End user's peer that creates and sends transactions.
+4. `light wallet`: End user's peer that uses [light client protocol](https://github.com/ethereum/wiki/wiki/Light-client-protocol)
+
+Our private network architecture will have at least 3 out of 4 types of clients. A bootnode for coordinator purpose, some miners to do the mining and a wallet to simulate an end-user. We can have a couple more light wallet but it is not the main focus of this article. I'll write about light wallet sometimes later.
+
+The private net workflow is straightforward. We setup a bootnode and keep it running. We then start some miners that share the same configuration that connect to the same bootnode sothat they can discover each other. Later on, we connect our wallet to the bootnode as user joining the Ethereum network.
+
