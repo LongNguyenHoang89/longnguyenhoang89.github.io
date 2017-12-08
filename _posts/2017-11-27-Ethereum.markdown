@@ -29,7 +29,55 @@ The private net workflow is straightforward. We setup a bootnode and keep it run
 
 # 2. Private network
 
-## 2.1 Tools
-To start with, we are going to use [Geth](https://github.com/ethereum/go-ethereum), the official Ethereum implementation in Go. Geth is the first and most updated Ethereum client so I recommend to stick with this for the development purpose. 
+We are going to use [Geth](https://github.com/ethereum/go-ethereum), the official Ethereum implementation in Go.
+We can download the binary releases [here](https://geth.ethereum.org/downloads/) and install the `development tools` as well.
+
+## Bootnode setup
+You'll find a `bootnode` executable on the newly installed Geth directory. We'll need to generate a private key by running
+
+    bootnode.exe -genkey bootnode.key
+
+Then run the bootnode
+    
+    bootnode.exe -nodekey bootnode.key -verbosity 9
+    I1208 01:27:54.617968 p2p/discover/udp.go:227] Listening, enode://e5ce9dde1d2ebf129ff69cf59a6f0813ec54caec9f90ddd4dda191c44c399eeae6c114f54b3b69e288c6630290814049b7619508e93a6d02967bdd3e7086029e@[::]:30301
 
 
+`enode://e5...[::]:30301` is the address of the bootnode, write down this url.
+
+## Node setup
+The `bootnode` is the bootstraping point. From here, we can create other node to complete the network. Let's start creating our first miner. 
+
+First, we need a `genesis` block specification. This is also block number 0 that the network will base on to mine. We can create a file call `genesis.json` with the following content.
+
+    {
+        "alloc"      : {},
+        "coinbase"   : "0x0000000000000000000000000000000000000000",
+        "difficulty" : "0x4000",
+        "extraData"  : "Test Net Genesis Block",
+        "gasLimit"   : "0x2fefd8",
+        "nonce"      : "0x0000000000000042",
+        "mixhash"    : "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "parentHash" : "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "timestamp"  : "0x00"
+    }
+
+The most important attribute that we should take care of is `difficulty`. This determine how difficult it is to mine a block. If the difficulty is too low, we will get new block very fast, which sometimes annoy me since it is not similar to how MainNet works. On the contrary, high difficulty results in longer block time. The average time for a block in Mainnet is around 17 seconds while on a private net it can be around 13 because all my miners only use local network. Although the mining algorithm will alternate the difficulty if the block time is longer or shorter, it would be the best that we don't mess thing up from the start.
+
+Then, we can create our first node with:
+
+    geth.exe --datadir=.\alice init genesis.json
+
+This will create a directory `alice` that contains all blockchain data for the node. From here, we can launch the node with:
+
+    geth.exe --datadir=.\alice --identity alice --bootnodes=enode://e5ce9dde1d2ebf129ff69cf59a6f0813ec54caec9f90ddd4dda191c44c399eeae6c114f54b3b69e288c6630290814049b7619508e93a6d02967bdd3e7086029e@127.0.0.1:30301 --port 30304  --ipcpath alice\geth.ipc --networkid 101 --rpc --nodiscover
+
+Remember the bootnode address? Copy it here and replace [::] with 127.0.0.1. Somehow geth cannot distinguish those 2. You can replace `30304` with your choice for the port. Also, if you want to run multiple nodes on 1 machine like me, you need to specify a different `ipcpath` for each node. It can be anything though.
+
+If you check the bootnode commandline, you will find that the new node that we created had connected to the bootnode.
+
+Now you can repeat the process to create a second node called `Bob` with the same genesis file and bootnode. However, `Bob` must use differnt datadir, port, identity and ipcpath.
+
+    geth.exe --datadir=.\bob init genesis.json
+    geth.exe --datadir=.\bob --identity bob --bootnodes=enode://e5ce9dde1d2ebf129ff69cf59a6f0813ec54caec9f90ddd4dda191c44c399eeae6c114f54b3b69e288c6630290814049b7619508e93a6d02967bdd3e7086029e@127.0.0.1:30301 --port 30305  --ipcpath bob\geth.ipc --networkid 101 --rpc --nodiscover
+    
