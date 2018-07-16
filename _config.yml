@@ -26,8 +26,6 @@ github_username:  LongNguyenHoang89
 markdown: kramdown
 # theme: jekyll-theme-hacker
 theme: minima
-plugins:
-  - jekyll-feed
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
